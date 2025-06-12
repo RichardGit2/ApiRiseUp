@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RiseUpAPI.Data;
+using RiseUpAPI.Helpers;
 using RiseUpAPI.Services;
 using System.Text;
 
@@ -15,28 +16,46 @@ builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Configurar conexão PostgreSQL
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// Configure PostgreSQL connection using environment variables or appsettings
+var connectionString = ConnectionStringBuilder.Build(builder.Configuration);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+{
+    options.UseNpgsql(connectionString, npgsqlOptions =>
+    {
+        // Configurar retry policy para lidar com falhas temporárias de conexão
+        npgsqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorCodesToAdd: null);
+    });
+});
 
 // Adiciona serviços
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IOpportunityService, OpportunityService>();
 
-// Configurar autenticação JWT
+// Configure JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+        // Usar JWT_KEY da variável de ambiente ou do appsettings
+        var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY") ?? 
+                     builder.Configuration.GetSection("JwtSettings")["Key"];
+        
+        var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? 
+                         builder.Configuration.GetSection("JwtSettings")["Issuer"];
+                         
+        var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? 
+                           builder.Configuration.GetSection("JwtSettings")["Audience"];
+
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings["Key"] ?? "")),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey ?? "")),
             ValidateIssuer = true,
-            ValidIssuer = jwtSettings["Issuer"],
+            ValidIssuer = jwtIssuer,
             ValidateAudience = true,
-            ValidAudience = jwtSettings["Audience"],
+            ValidAudience = jwtAudience,
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
         };
@@ -118,18 +137,40 @@ app.MapControllers();
 // Redirecionamento da raiz para o Swagger
 app.MapGet("/", () => Results.Redirect("/swagger"));
 
-// Aplicar migrações automaticamente
+// Adicionar um healthcheck endpoint
+app.MapGet("/health", () => Results.Ok(new { 
+    status = "healthy", 
+    timestamp = DateTime.UtcNow,
+    database = "PostgreSQL",
+    environment = app.Environment.EnvironmentName
+}));
+
+// Aplicar migrações automaticamente com tratamento de exceção robusto
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    
     try
     {
+        logger.LogInformation("Tentando aplicar migrações ao banco de dados...");
         var context = services.GetRequiredService<ApplicationDbContext>();
-        context.Database.Migrate();
+        
+        // Teste a conexão antes de tentar aplicar as migrações
+        var canConnect = await context.Database.CanConnectAsync();
+        if (canConnect)
+        {
+            logger.LogInformation("Conexão com o banco de dados estabelecida com sucesso!");
+            await context.Database.MigrateAsync();
+            logger.LogInformation("Migrações aplicadas com sucesso!");
+        }
+        else
+        {
+            logger.LogError("Não foi possível conectar ao banco de dados!");
+        }
     }
     catch (Exception ex)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "Ocorreu um erro ao aplicar as migrações ou inicializar o banco de dados.");
     }
 }
