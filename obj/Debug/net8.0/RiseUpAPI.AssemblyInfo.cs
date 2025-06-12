@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RiseUpAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f6074d7b5bdb9a5940ea962b84e76e82cf9a6db0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+802fd83ab644c27431256b7f3bc198a3a997e215")]
 [assembly: System.Reflection.AssemblyProductAttribute("RiseUpAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RiseUpAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
