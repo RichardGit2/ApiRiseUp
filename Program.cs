@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using RiseUpAPI.Data;
-using System.Globalization;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -8,10 +7,6 @@ using System.Text;
 using RiseUpAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Configuração da cultura para português do Brasil
-CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");
-CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("pt-BR");
 
 // Add services to the container.
 builder.Services.AddControllers();
