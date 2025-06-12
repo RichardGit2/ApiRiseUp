@@ -55,7 +55,11 @@ public class ApplicationDbContext : DbContext
             
         foreach (var entity in builder.Model.GetEntityTypes())
         {
-            entity.SetTableName(entity.GetTableName().ToLower());
+            var tableName = entity.GetTableName();
+            if (tableName != null)
+            {
+                entity.SetTableName(tableName.ToLower());
+            }
         }
     }
 }

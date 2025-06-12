@@ -57,4 +57,4 @@ public class SearchController : ControllerBase
             return StatusCode(500, "Erro interno do servidor");
         }
     }
-} 
+}

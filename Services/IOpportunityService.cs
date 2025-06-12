@@ -1,19 +1,11 @@
 using RiseUpAPI.Models;
 
-namespace RiseUpAPI.Services
-{
-    public interface IOpportunityService
-    {
-        Task<(List<Opportunity> opportunities, int totalItems)> SearchOpportunities(
-            string search,
-            string location,
-            string type,
-            int pageNumber,
-            int pageSize);
+namespace RiseUpAPI.Services;
 
-        Task<Opportunity> GetOpportunityById(int id);
-        Task<Opportunity> CreateOpportunity(Opportunity opportunity);
-        Task<Opportunity> UpdateOpportunity(int id, Opportunity opportunity);
-        Task DeleteOpportunity(int id);
-    }
-} 
+public interface IOpportunityService
+{
+    Task<(List<Opportunity> opportunities, int totalCount)> SearchOpportunities(
+        string search, string location, string type, int page, int pageSize);
+    
+    Task<Opportunity?> GetOpportunity(int id);
+}
