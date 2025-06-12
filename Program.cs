@@ -123,23 +123,57 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        var logger = services.GetRequiredService<ILogger<Program>>();
         
-        logger.LogInformation("Tentando conectar ao banco de dados...");
-        context.Database.Migrate();
-        logger.LogInformation("Migrações aplicadas com sucesso.");
+        logger.LogInformation("Verificando conexão com o banco de dados...");
+        if (context.Database.CanConnect())
+        {
+            logger.LogInformation("Conexão com o banco de dados estabelecida com sucesso.");
+        }
+        else
+        {
+            logger.LogError("Não foi possível conectar ao banco de dados.");
+            throw new Exception("Não foi possível conectar ao banco de dados.");
+        }
+
+        logger.LogInformation("Verificando migrações pendentes...");
+        var pendingMigrations = context.Database.GetPendingMigrations().ToList();
+        if (pendingMigrations.Any())
+        {
+            logger.LogInformation("Migrações pendentes encontradas: {Migrations}", string.Join(", ", pendingMigrations));
+            logger.LogInformation("Aplicando migrações...");
+            context.Database.Migrate();
+            logger.LogInformation("Migrações aplicadas com sucesso.");
+        }
+        else
+        {
+            logger.LogInformation("Não há migrações pendentes.");
+        }
+
+        // Verificar se a tabela Users existe
+        var tableExists = context.Database.SqlQueryRaw<bool>(
+            "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'Users')").FirstOrDefault();
+        
+        if (!tableExists)
+        {
+            logger.LogError("A tabela Users não existe após a aplicação das migrações.");
+            throw new Exception("A tabela Users não existe após a aplicação das migrações.");
+        }
+        
+        logger.LogInformation("A tabela Users existe no banco de dados.");
     }
     catch (Exception ex)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Ocorreu um erro ao aplicar as migrações. Detalhes: {Message}", ex.Message);
+        logger.LogError(ex, "Ocorreu um erro ao configurar o banco de dados. Detalhes: {Message}", ex.Message);
         if (ex.InnerException != null)
         {
             logger.LogError("Erro interno: {InnerMessage}", ex.InnerException.Message);
         }
+        throw; // Re-throw para garantir que a aplicação não inicie com o banco de dados não configurado
     }
 }
 
