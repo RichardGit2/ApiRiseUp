@@ -32,12 +32,26 @@ public class AuthController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
+        if (await _context.Users.AnyAsync(u => u.Email == request.Email))
+            return BadRequest("Email já está em uso");
+
+        if (await _context.Users.AnyAsync(u => u.CPF == request.CPF))
+            return BadRequest("CPF já está em uso");
+
         var user = new User
         {
+            CPF = request.CPF,
             FullName = request.FullName,
             Email = request.Email,
             Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-            Role = request.Role ?? "User"
+            ZipCode = request.ZipCode,
+            Street = request.Street,
+            City = request.City,
+            State = request.State,
+            Country = request.Country,
+            Role = request.Role ?? "User",
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
 
         _context.Users.Add(user);
@@ -61,6 +75,7 @@ public class AuthController : ControllerBase
         {
             Subject = new ClaimsIdentity(new[]
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.FullName),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role)
@@ -91,11 +106,11 @@ public class AuthController : ControllerBase
     [HttpGet("me")]
     public async Task<IActionResult> GetCurrentUser()
     {
-        var email = User.FindFirst(ClaimTypes.Name)?.Value;
-        if (string.IsNullOrEmpty(email))
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
             return Unauthorized();
 
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
         if (user == null)
             return NotFound();
 
