@@ -141,10 +141,9 @@ C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\RiseUpAPI.
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\RiseUpAPI.AssemblyInfoInputs.cache
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\RiseUpAPI.AssemblyInfo.cs
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\RiseUpAPI.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\RiseUpAPI.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\RiseUpAPI.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\RiseUpAPI.dll
-C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\refint\RiseUpAPI.dll
-C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\RiseUpAPI.pdb
+C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\RiseUpAPI.sourcelink.json
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\appsettings.json
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\RiseUpAPI.exe
@@ -152,7 +151,11 @@ C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\RiseUpAPI.
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\RiseUpAPI.runtimeconfig.json
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\RiseUpAPI.dll
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\RiseUpAPI.pdb
+C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\BCrypt.Net-Next.dll
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Humanizer.dll
+C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Microsoft.AspNetCore.OpenApi.dll
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.dll
@@ -171,6 +174,8 @@ C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Microsoft.
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Microsoft.OpenApi.dll
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Mono.TextTemplating.dll
+C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Npgsql.dll
+C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -233,7 +238,6 @@ C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\ru\Microso
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\RiseUpAPI.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\staticwebassets\msbuild.RiseUpAPI.Microsoft.AspNetCore.StaticWebAssets.props
@@ -243,11 +247,8 @@ C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\staticweba
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\staticwebassets.pack.json
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\scopedcss\bundle\RiseUpAPI.styles.css
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\RiseUpAPI.csproj.Up2Date
+C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\RiseUpAPI.dll
+C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\refint\RiseUpAPI.dll
+C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\RiseUpAPI.pdb
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\RiseUpAPI.genruntimeconfig.cache
 C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\ref\RiseUpAPI.dll
-C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Microsoft.AspNetCore.OpenApi.dll
-C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\obj\Debug\net8.0\RiseUpAPI.sourcelink.json
-C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\BCrypt.Net-Next.dll
-C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Npgsql.dll
-C:\Users\user\Desktop\Atypical_RiseUp-main\RiseUpAPI\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll

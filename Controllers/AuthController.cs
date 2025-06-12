@@ -27,17 +27,17 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+    public async Task<IActionResult> Register([FromBody] User request)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         var user = new User
         {
+            FullName = request.FullName,
             Email = request.Email,
             Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-            FullName = request.Name,
-            Role = "User"
+            Role = request.Role ?? "User"
         };
 
         _context.Users.Add(user);
@@ -47,7 +47,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    public async Task<IActionResult> Login([FromBody] User request)
     {
         var user = await _authService.ValidateUser(request.Email, request.Password);
         if (user == null)
@@ -61,7 +61,8 @@ public class AuthController : ControllerBase
         {
             Subject = new ClaimsIdentity(new[]
             {
-                new Claim(ClaimTypes.Name, user.Email),
+                new Claim(ClaimTypes.Name, user.FullName),
+                new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role)
             }),
             Expires = DateTime.UtcNow.AddMinutes(60),
@@ -79,8 +80,8 @@ public class AuthController : ControllerBase
             user = new
             {
                 id = user.Id,
+                name = user.FullName,
                 email = user.Email,
-                fullName = user.FullName,
                 role = user.Role
             }
         });

@@ -33,6 +33,7 @@ public class OpportunitiesController : ControllerBase
             var opportunities = await _context.Opportunities
                 .Include(o => o.Organization)
                 .Include(o => o.Activities)
+                .Include(o => o.Audience)
                 .Skip(skip)
                 .Take(pageSize)
                 .ToListAsync();
@@ -44,32 +45,7 @@ public class OpportunitiesController : ControllerBase
                 Count = totalCount,
                 Next = totalCount > skip + pageSize ? $"/api/opportunities?page={pageNumber + 1}" : null,
                 Previous = pageNumber > 1 ? $"/api/opportunities?page={pageNumber - 1}" : null,
-                Results = opportunities.Select(o => new OpportunityResponse
-                {
-                    Id = o.Id,
-                    Url = o.Url,
-                    Title = o.Title,
-                    Description = o.Description,
-                    RemoteOrOnline = o.RemoteOrOnline,
-                    Organization = new OrganizationResponse
-                    {
-                        Name = o.Organization.Name,
-                        Logo = o.Organization.Logo,
-                        Url = o.Organization.Url
-                    },
-                    Activities = o.Activities.Select(a => new ActivityResponse
-                    {
-                        Name = a.Name,
-                        Category = a.Category
-                    }).ToList(),
-                    Dates = o.Dates,
-                    Duration = o.Duration,
-                    Audience = new AudienceResponse
-                    {
-                        Scope = o.Scope,
-                        Regions = o.Regions
-                    }
-                }).ToList()
+                Results = opportunities
             };
 
             return Ok(response);
@@ -217,38 +193,5 @@ public class VolunteerResponse
     public int Count { get; set; }
     public string Next { get; set; }
     public string Previous { get; set; }
-    public List<OpportunityResponse> Results { get; set; }
-}
-
-public class OpportunityResponse
-{
-    public int Id { get; set; }
-    public string Url { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public bool RemoteOrOnline { get; set; }
-    public OrganizationResponse Organization { get; set; }
-    public List<ActivityResponse> Activities { get; set; }
-    public string Dates { get; set; }
-    public string Duration { get; set; }
-    public AudienceResponse Audience { get; set; }
-}
-
-public class OrganizationResponse
-{
-    public string Name { get; set; }
-    public string Logo { get; set; }
-    public string Url { get; set; }
-}
-
-public class ActivityResponse
-{
-    public string Name { get; set; }
-    public string Category { get; set; }
-}
-
-public class AudienceResponse
-{
-    public string Scope { get; set; }
-    public List<string> Regions { get; set; }
+    public List<Opportunity> Results { get; set; }
 } 

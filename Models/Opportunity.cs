@@ -20,16 +20,20 @@ public class Opportunity
 
     public bool RemoteOrOnline { get; set; }
 
+    [Required]
     public int OrganizationId { get; set; }
     public Organization Organization { get; set; }
 
-    public List<Activity> Activities { get; set; }
+    public List<Activity> Activities { get; set; } = new();
 
     [Required]
     public string Dates { get; set; }
 
     [Required]
     public string Duration { get; set; }
+
+    [Required]
+    public Audience Audience { get; set; }
 
     [Required]
     public string Scope { get; set; }
