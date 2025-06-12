@@ -15,10 +15,19 @@ public class ApplicationDbContext : DbContext
     public DbSet<Opportunity> Opportunities { get; set; }
     public DbSet<Activity> Activities { get; set; }
     public DbSet<Audience> Audiences { get; set; }
+    public DbSet<Region> Regions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        builder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+
+        builder.Entity<User>()
+            .HasIndex(u => u.CPF)
+            .IsUnique();
 
         builder.Entity<Organization>()
             .HasMany(o => o.Opportunities)
@@ -36,6 +45,12 @@ public class ApplicationDbContext : DbContext
             .HasOne(o => o.Audience)
             .WithOne(a => a.Opportunity)
             .HasForeignKey<Audience>(a => a.OpportunityId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Audience>()
+            .HasMany(a => a.Regions)
+            .WithOne(r => r.Audience)
+            .HasForeignKey(r => r.AudienceId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 } 
