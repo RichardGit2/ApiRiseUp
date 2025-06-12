@@ -4,13 +4,15 @@ namespace RiseUpAPI.Models;
 
 public class Audience
 {
-    public int Id { get; set; }
+    [Key]
+    public string Id { get; set; } = Guid.NewGuid().ToString();
     
-    [Required]
     public string Scope { get; set; }
     
-    public List<string> Regions { get; set; } = new();
+    public string OpportunityId { get; set; }
+    public Opportunity Opportunity { get; set; }
     
-    public int OpportunityId { get; set; }
-    public Opportunity? Opportunity { get; set; }
+    public List<Region> Regions { get; set; } = new();
+    
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 } 

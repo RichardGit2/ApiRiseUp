@@ -88,6 +88,7 @@ builder.Services.AddSwaggerGen(c =>
 
 // Registrar serviços
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IOpportunityService, OpportunityService>();
 
 var app = builder.Build();
 

@@ -5,7 +5,8 @@ namespace RiseUpAPI.Models;
 
 public class Opportunity
 {
-    public int Id { get; set; }
+    [Key]
+    public string Id { get; set; } = Guid.NewGuid().ToString();
 
     [Required]
     [MaxLength(200)]
@@ -21,7 +22,7 @@ public class Opportunity
     public bool RemoteOrOnline { get; set; }
 
     [Required]
-    public int OrganizationId { get; set; }
+    public string OrganizationId { get; set; }
     public Organization Organization { get; set; }
 
     public List<Activity> Activities { get; set; } = new();
@@ -40,4 +41,12 @@ public class Opportunity
 
     [Required]
     public List<string> Regions { get; set; }
+
+    public string Company { get; set; }
+    public string Location { get; set; }
+    public string Type { get; set; }
+    public string Requirements { get; set; }
+    public string Benefits { get; set; }
+    public string Salary { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 } 

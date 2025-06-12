@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RiseUpAPI.Data;
 using RiseUpAPI.Models;
+using RiseUpAPI.Services;
 
 namespace RiseUpAPI.Controllers;
 
@@ -11,38 +13,38 @@ public class SearchController : ControllerBase
 {
     private readonly ILogger<SearchController> _logger;
     private readonly ApplicationDbContext _context;
+    private readonly IOpportunityService _opportunityService;
 
-    public SearchController(ILogger<SearchController> logger, ApplicationDbContext context)
+    public SearchController(ILogger<SearchController> logger, ApplicationDbContext context, IOpportunityService opportunityService)
     {
         _logger = logger;
         _context = context;
+        _opportunityService = opportunityService;
     }
 
     [HttpGet]
-    public async Task<ActionResult<VolunteerResponse>> SearchOpportunities(
+    public async Task<ActionResult<VolunteerResponse>> Search(
         [FromQuery] string format = "json",
-        [FromQuery] string page = "1")
+        [FromQuery] string page = "1",
+        [FromQuery] string search = "",
+        [FromQuery] string location = "",
+        [FromQuery] string type = "")
     {
         try
         {
-            var pageSize = 10;
             var pageNumber = int.Parse(page);
-            var skip = (pageNumber - 1) * pageSize;
+            var pageSize = 10;
 
-            var opportunities = await _context.Opportunities
-                .Include(o => o.Organization)
-                .Include(o => o.Activities)
-                .Include(o => o.Audience)
-                .Skip(skip)
-                .Take(pageSize)
-                .ToListAsync();
+            var (opportunities, totalItems) = await _opportunityService.SearchOpportunities(
+                search, location, type, pageNumber, pageSize);
 
-            var totalCount = await _context.Opportunities.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            var hasNextPage = pageNumber < totalPages;
 
             var response = new VolunteerResponse
             {
-                Count = totalCount,
-                Next = totalCount > skip + pageSize ? $"/api/search?page={pageNumber + 1}" : null,
+                Count = totalItems,
+                Next = hasNextPage ? $"/api/search?page={pageNumber + 1}" : null,
                 Previous = pageNumber > 1 ? $"/api/search?page={pageNumber - 1}" : null,
                 Results = opportunities
             };

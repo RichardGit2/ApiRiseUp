@@ -1,0 +1,312 @@
+# Documentação da API RiseUp
+
+## Visão Geral
+A API RiseUp é uma API RESTful desenvolvida em .NET 8 que fornece funcionalidades para gerenciamento de oportunidades de trabalho e autenticação de usuários.
+
+## Base URL
+```
+https://apiriseup.onrender.com
+```
+
+## Autenticação
+A API utiliza autenticação JWT (JSON Web Token). Para acessar endpoints protegidos, é necessário incluir o token no header da requisição:
+```
+Authorization: Bearer {seu_token}
+```
+
+## Endpoints
+
+### Autenticação
+
+#### POST /api/auth/register
+Registra um novo usuário no sistema.
+
+**Request Body:**
+```json
+{
+    "email": "string",
+    "password": "string",
+    "name": "string"
+}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Usuário registrado com sucesso",
+    "data": {
+        "id": "string",
+        "email": "string",
+        "name": "string"
+    }
+}
+```
+
+#### POST /api/auth/login
+Autentica um usuário e retorna um token JWT.
+
+**Request Body:**
+```json
+{
+    "email": "string",
+    "password": "string"
+}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Login realizado com sucesso",
+    "data": {
+        "token": "string",
+        "user": {
+            "id": "string",
+            "email": "string",
+            "name": "string"
+        }
+    }
+}
+```
+
+### Oportunidades
+
+#### GET /api/opportunities
+Retorna uma lista de oportunidades de trabalho.
+
+**Query Parameters:**
+- page (int, opcional): Número da página (padrão: 1)
+- pageSize (int, opcional): Itens por página (padrão: 10)
+- search (string, opcional): Termo de busca
+- location (string, opcional): Localização
+- type (string, opcional): Tipo de oportunidade
+
+**Response:**
+```json
+{
+    "success": true,
+    "data": {
+        "items": [
+            {
+                "id": "string",
+                "title": "string",
+                "description": "string",
+                "company": "string",
+                "location": "string",
+                "type": "string",
+                "createdAt": "datetime"
+            }
+        ],
+        "totalItems": 0,
+        "totalPages": 0,
+        "currentPage": 0
+    }
+}
+```
+
+#### GET /api/opportunities/{id}
+Retorna detalhes de uma oportunidade específica.
+
+**Response:**
+```json
+{
+    "success": true,
+    "data": {
+        "id": "string",
+        "title": "string",
+        "description": "string",
+        "company": "string",
+        "location": "string",
+        "type": "string",
+        "requirements": "string",
+        "benefits": "string",
+        "salary": "string",
+        "createdAt": "datetime"
+    }
+}
+```
+
+#### POST /api/opportunities
+Cria uma nova oportunidade (requer autenticação).
+
+**Request Body:**
+```json
+{
+    "title": "string",
+    "description": "string",
+    "company": "string",
+    "location": "string",
+    "type": "string",
+    "requirements": "string",
+    "benefits": "string",
+    "salary": "string"
+}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Oportunidade criada com sucesso",
+    "data": {
+        "id": "string",
+        "title": "string",
+        "description": "string",
+        "company": "string",
+        "location": "string",
+        "type": "string",
+        "requirements": "string",
+        "benefits": "string",
+        "salary": "string",
+        "createdAt": "datetime"
+    }
+}
+```
+
+#### PUT /api/opportunities/{id}
+Atualiza uma oportunidade existente (requer autenticação).
+
+**Request Body:**
+```json
+{
+    "title": "string",
+    "description": "string",
+    "company": "string",
+    "location": "string",
+    "type": "string",
+    "requirements": "string",
+    "benefits": "string",
+    "salary": "string"
+}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Oportunidade atualizada com sucesso",
+    "data": {
+        "id": "string",
+        "title": "string",
+        "description": "string",
+        "company": "string",
+        "location": "string",
+        "type": "string",
+        "requirements": "string",
+        "benefits": "string",
+        "salary": "string",
+        "createdAt": "datetime"
+    }
+}
+```
+
+#### DELETE /api/opportunities/{id}
+Remove uma oportunidade (requer autenticação).
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Oportunidade removida com sucesso"
+}
+```
+
+### Busca
+
+#### GET /api/search
+Realiza uma busca por oportunidades com filtros avançados.
+
+**Query Parameters:**
+- query (string, opcional): Termo de busca
+- location (string, opcional): Localização
+- type (string, opcional): Tipo de oportunidade
+- page (int, opcional): Número da página
+- pageSize (int, opcional): Itens por página
+
+**Response:**
+```json
+{
+    "success": true,
+    "data": {
+        "items": [
+            {
+                "id": "string",
+                "title": "string",
+                "description": "string",
+                "company": "string",
+                "location": "string",
+                "type": "string",
+                "createdAt": "datetime"
+            }
+        ],
+        "totalItems": 0,
+        "totalPages": 0,
+        "currentPage": 0
+    }
+}
+```
+
+## Códigos de Status HTTP
+- 200: Sucesso
+- 201: Criado
+- 400: Requisição inválida
+- 401: Não autorizado
+- 403: Proibido
+- 404: Não encontrado
+- 500: Erro interno do servidor
+
+## Exemplos de Uso
+
+### 1. Registro de Usuário
+```http
+POST /api/auth/register
+Content-Type: application/json
+
+{
+    "email": "usuario@exemplo.com",
+    "password": "senha123",
+    "name": "Usuário Exemplo"
+}
+```
+
+### 2. Login
+```http
+POST /api/auth/login
+Content-Type: application/json
+
+{
+    "email": "usuario@exemplo.com",
+    "password": "senha123"
+}
+```
+
+### 3. Listar Oportunidades
+```http
+GET /api/opportunities?page=1&pageSize=10&location=São Paulo
+Authorization: Bearer {seu_token}
+```
+
+### 4. Criar Oportunidade
+```http
+POST /api/opportunities
+Authorization: Bearer {seu_token}
+Content-Type: application/json
+
+{
+    "title": "Desenvolvedor Full Stack",
+    "description": "Vaga para desenvolvedor full stack",
+    "company": "Empresa XYZ",
+    "location": "São Paulo",
+    "type": "CLT",
+    "requirements": "Experiência com .NET e React",
+    "benefits": "Plano de saúde, VR, VT",
+    "salary": "R$ 8.000,00"
+}
+```
+
+## Observações
+- Todos os endpoints que manipulam oportunidades (POST, PUT, DELETE) requerem autenticação
+- O token JWT expira após 60 minutos
+- A API implementa paginação em todas as listagens
+- As respostas seguem um padrão consistente com os campos success, message e data 

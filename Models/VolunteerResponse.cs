@@ -1,9 +1,13 @@
 namespace RiseUpAPI.Models;
 
-public class VolunteerResponse
+public class VolunteerResponse<T>
 {
     public int Count { get; set; }
-    public string Next { get; set; } = string.Empty;
-    public string Previous { get; set; } = string.Empty;
-    public List<Opportunity> Results { get; set; } = new();
+    public string Next { get; set; }
+    public string Previous { get; set; }
+    public List<T> Results { get; set; } = new();
+}
+
+public class VolunteerResponse : VolunteerResponse<Opportunity>
+{
 } 
