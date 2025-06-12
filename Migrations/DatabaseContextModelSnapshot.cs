@@ -6,7 +6,7 @@ using RiseUpAPI.Data;
 namespace RiseUpAPI.Migrations;
 
 [DbContext(typeof(ApplicationDbContext))]
-[Migration("20240312000000_AddNewFieldsAndAudience")]
+[Migration("20240312000001_AddUsersTable")]
 public partial class DatabaseContextModelSnapshot : ModelSnapshot
 {
     protected override void BuildModel(ModelBuilder modelBuilder)
@@ -16,6 +16,81 @@ public partial class DatabaseContextModelSnapshot : ModelSnapshot
             .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
         NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+        modelBuilder.Entity("RiseUpAPI.Models.User", b =>
+        {
+            b.Property<int>("Id")
+                .ValueGeneratedOnAdd()
+                .HasColumnType("integer");
+
+            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+            b.Property<string>("CPF")
+                .IsRequired()
+                .HasMaxLength(11)
+                .HasColumnType("character varying(11)");
+
+            b.Property<string>("City")
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasColumnType("character varying(50)");
+
+            b.Property<string>("Country")
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasColumnType("character varying(50)");
+
+            b.Property<DateTime>("CreatedAt")
+                .HasColumnType("timestamp with time zone");
+
+            b.Property<string>("Email")
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnType("character varying(100)");
+
+            b.Property<string>("FullName")
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnType("character varying(100)");
+
+            b.Property<string>("Password")
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnType("character varying(100)");
+
+            b.Property<string>("Role")
+                .IsRequired()
+                .HasMaxLength(20)
+                .HasColumnType("character varying(20)");
+
+            b.Property<string>("State")
+                .IsRequired()
+                .HasMaxLength(2)
+                .HasColumnType("character varying(2)");
+
+            b.Property<string>("Street")
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnType("character varying(100)");
+
+            b.Property<DateTime>("UpdatedAt")
+                .HasColumnType("timestamp with time zone");
+
+            b.Property<string>("ZipCode")
+                .IsRequired()
+                .HasMaxLength(8)
+                .HasColumnType("character varying(8)");
+
+            b.HasKey("Id");
+
+            b.HasIndex("CPF")
+                .IsUnique();
+
+            b.HasIndex("Email")
+                .IsUnique();
+
+            b.ToTable("Users");
+        });
 
         modelBuilder.Entity("RiseUpAPI.Models.Activity", b =>
         {
