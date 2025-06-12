@@ -1,0 +1,6 @@
+@RiseUpAPI_HostAddress = http://localhost:5109
+
+GET {{RiseUpAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
