@@ -13,8 +13,9 @@ public class Audience
 
     public ICollection<Region> Regions { get; set; } = new List<Region>();
 
+    // Esta propriedade deve continuar pois ela define a chave estrangeira na Audience
     public int OpportunityId { get; set; }
 
     [ForeignKey("OpportunityId")]
     public Opportunity Opportunity { get; set; } = null!;
-} 
+}

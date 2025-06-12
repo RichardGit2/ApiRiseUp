@@ -10,12 +10,12 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    public DbSet<User> Users { get; set; }
-    public DbSet<Organization> Organizations { get; set; }
-    public DbSet<Opportunity> Opportunities { get; set; }
-    public DbSet<Activity> Activities { get; set; }
-    public DbSet<Audience> Audiences { get; set; }
-    public DbSet<Region> Regions { get; set; }
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<Organization> Organizations { get; set; } = null!;
+    public DbSet<Opportunity> Opportunities { get; set; } = null!;
+    public DbSet<Activity> Activities { get; set; } = null!;
+    public DbSet<Audience> Audiences { get; set; } = null!;
+    public DbSet<Region> Regions { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -52,5 +52,10 @@ public class ApplicationDbContext : DbContext
             .WithOne(r => r.Audience)
             .HasForeignKey(r => r.AudienceId)
             .OnDelete(DeleteBehavior.Cascade);
+            
+        foreach (var entity in builder.Model.GetEntityTypes())
+        {
+            entity.SetTableName(entity.GetTableName().ToLower());
+        }
     }
-} 
+}

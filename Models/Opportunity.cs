@@ -60,10 +60,7 @@ public class Opportunity
     [StringLength(100)]
     public string Duration { get; set; } = string.Empty;
 
-    public int AudienceId { get; set; }
-
-    [ForeignKey("AudienceId")]
-    public Audience Audience { get; set; } = null!;
+    public virtual Audience Audience { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-} 
+}
