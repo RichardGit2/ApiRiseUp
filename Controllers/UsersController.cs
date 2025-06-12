@@ -11,9 +11,9 @@ namespace RiseUpAPI.Controllers;
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
-    private readonly DatabaseContext _context;
+    private readonly ApplicationDbContext _context;
 
-    public UsersController(DatabaseContext context)
+    public UsersController(ApplicationDbContext context)
     {
         _context = context;
     }

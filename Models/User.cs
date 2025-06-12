@@ -43,6 +43,10 @@ public class User
     [StringLength(50)]
     public string Country { get; set; } = string.Empty;
 
+    [Required]
+    [StringLength(20)]
+    public string Role { get; set; } = "User";
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 } 

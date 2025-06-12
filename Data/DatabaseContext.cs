@@ -5,9 +5,9 @@ using RiseUpAPI.Models;
 
 namespace RiseUpAPI.Data
 {
-    public class DatabaseContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
@@ -19,6 +19,19 @@ namespace RiseUpAPI.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Configurar relacionamentos
+            modelBuilder.Entity<Opportunity>()
+                .HasOne(o => o.Organization)
+                .WithMany()
+                .HasForeignKey(o => o.OrganizationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Activity>()
+                .HasOne(a => a.Opportunity)
+                .WithMany(o => o.Activities)
+                .HasForeignKey(a => a.OpportunityId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Configuração para a propriedade Regions da entidade Opportunity
             modelBuilder.Entity<Opportunity>()

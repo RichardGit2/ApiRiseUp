@@ -36,7 +36,7 @@ public class AuthController : ControllerBase
         {
             Email = request.Email,
             Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-            Name = request.Name,
+            FullName = request.Name,
             Role = "User"
         };
 
@@ -80,7 +80,7 @@ public class AuthController : ControllerBase
             {
                 id = user.Id,
                 email = user.Email,
-                name = user.Name,
+                fullName = user.FullName,
                 role = user.Role
             }
         });
@@ -102,7 +102,7 @@ public class AuthController : ControllerBase
         {
             id = user.Id,
             email = user.Email,
-            name = user.Name,
+            fullName = user.FullName,
             role = user.Role
         });
     }

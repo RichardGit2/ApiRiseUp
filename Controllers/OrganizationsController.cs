@@ -10,9 +10,9 @@ namespace RiseUpAPI.Controllers;
 [Route("api/[controller]")]
 public class OrganizationsController : ControllerBase
 {
-    private readonly DatabaseContext _context;
+    private readonly ApplicationDbContext _context;
 
-    public OrganizationsController(DatabaseContext context)
+    public OrganizationsController(ApplicationDbContext context)
     {
         _context = context;
     }

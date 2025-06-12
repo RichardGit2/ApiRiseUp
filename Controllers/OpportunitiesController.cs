@@ -11,9 +11,9 @@ namespace RiseUpAPI.Controllers;
 public class OpportunitiesController : ControllerBase
 {
     private readonly ILogger<OpportunitiesController> _logger;
-    private readonly DatabaseContext _context;
+    private readonly ApplicationDbContext _context;
 
-    public OpportunitiesController(ILogger<OpportunitiesController> logger, DatabaseContext context)
+    public OpportunitiesController(ILogger<OpportunitiesController> logger, ApplicationDbContext context)
     {
         _logger = logger;
         _context = context;
