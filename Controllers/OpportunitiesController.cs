@@ -10,51 +10,58 @@ namespace RiseUpAPI.Controllers;
 [Route("api/[controller]")]
 public class OpportunitiesController : ControllerBase
 {
-    private readonly ILogger<OpportunitiesController> _logger;
     private readonly ApplicationDbContext _context;
 
-    public OpportunitiesController(ILogger<OpportunitiesController> logger, ApplicationDbContext context)
+    public OpportunitiesController(ApplicationDbContext context)
     {
-        _logger = logger;
         _context = context;
     }
 
     [HttpGet]
-    public async Task<ActionResult<VolunteerResponse>> GetOpportunities(
-        [FromQuery] string format = "json",
-        [FromQuery] string page = "1")
+    public async Task<ActionResult<IEnumerable<Opportunity>>> GetOpportunities(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string? search = null,
+        [FromQuery] string? location = null,
+        [FromQuery] string? type = null)
     {
-        try
+        var query = _context.Opportunities
+            .Include(o => o.Organization)
+            .Include(o => o.Activities)
+            .Include(o => o.Audience)
+                .ThenInclude(a => a.Regions)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(search))
         {
-            var pageSize = 10;
-            var pageNumber = int.Parse(page);
-            var skip = (pageNumber - 1) * pageSize;
-
-            var opportunities = await _context.Opportunities
-                .Include(o => o.Organization)
-                .Include(o => o.Activities)
-                .Include(o => o.Audience)
-                .Skip(skip)
-                .Take(pageSize)
-                .ToListAsync();
-
-            var totalCount = await _context.Opportunities.CountAsync();
-
-            var response = new VolunteerResponse
-            {
-                Count = totalCount,
-                Next = totalCount > skip + pageSize ? $"/api/opportunities?page={pageNumber + 1}" : null,
-                Previous = pageNumber > 1 ? $"/api/opportunities?page={pageNumber - 1}" : null,
-                Results = opportunities
-            };
-
-            return Ok(response);
+            query = query.Where(o => o.Title.Contains(search) || o.Description.Contains(search));
         }
-        catch (Exception ex)
+
+        if (!string.IsNullOrEmpty(location))
         {
-            _logger.LogError(ex, "Erro ao buscar oportunidades");
-            return StatusCode(500, "Erro interno do servidor");
+            query = query.Where(o => o.Location.Contains(location));
         }
+
+        if (!string.IsNullOrEmpty(type))
+        {
+            query = query.Where(o => o.Type == type);
+        }
+
+        var totalCount = await query.CountAsync();
+        var opportunities = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var result = new
+        {
+            count = totalCount,
+            next = page * pageSize < totalCount ? $"/api/opportunities?page={page + 1}&pageSize={pageSize}" : null,
+            previous = page > 1 ? $"/api/opportunities?page={page - 1}&pageSize={pageSize}" : null,
+            results = opportunities
+        };
+
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
@@ -63,6 +70,8 @@ public class OpportunitiesController : ControllerBase
         var opportunity = await _context.Opportunities
             .Include(o => o.Organization)
             .Include(o => o.Activities)
+            .Include(o => o.Audience)
+                .ThenInclude(a => a.Regions)
             .FirstOrDefaultAsync(o => o.Id == id);
 
         if (opportunity == null)
@@ -75,7 +84,7 @@ public class OpportunitiesController : ControllerBase
 
     [Authorize(Roles = "Organization")]
     [HttpPost]
-    public async Task<ActionResult<Opportunity>> CreateOpportunity([FromBody] CreateOpportunityRequest request)
+    public async Task<ActionResult<Opportunity>> CreateOpportunity([FromBody] Opportunity opportunity)
     {
         var orgId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (orgId == null)
@@ -83,19 +92,14 @@ public class OpportunitiesController : ControllerBase
             return Unauthorized();
         }
 
-        var opportunity = new Opportunity
+        var organization = await _context.Organizations.FindAsync(int.Parse(orgId));
+        if (organization == null)
         {
-            Url = request.Url,
-            Title = request.Title,
-            Description = request.Description,
-            RemoteOrOnline = request.RemoteOrOnline,
-            OrganizationId = int.Parse(orgId),
-            Dates = request.Dates,
-            Duration = request.Duration,
-            Scope = request.Scope,
-            Regions = request.Regions,
-            Activities = new List<Activity>()
-        };
+            return NotFound("Organização não encontrada");
+        }
+
+        opportunity.OrganizationId = organization.Id;
+        opportunity.CreatedAt = DateTime.UtcNow;
 
         _context.Opportunities.Add(opportunity);
         await _context.SaveChangesAsync();
@@ -114,23 +118,29 @@ public class OpportunitiesController : ControllerBase
         }
 
         var opportunity = await _context.Opportunities.FindAsync(id);
-        if (opportunity == null || opportunity.OrganizationId != int.Parse(orgId))
+        if (opportunity == null)
         {
             return NotFound();
         }
 
-        // Atualizar campos
+        if (opportunity.OrganizationId != int.Parse(orgId))
+        {
+            return Forbid();
+        }
+
+        // Atualizar apenas campos permitidos
         opportunity.Title = updatedOpportunity.Title;
         opportunity.Description = updatedOpportunity.Description;
+        opportunity.Company = updatedOpportunity.Company;
+        opportunity.Location = updatedOpportunity.Location;
+        opportunity.Type = updatedOpportunity.Type;
+        opportunity.Requirements = updatedOpportunity.Requirements;
+        opportunity.Benefits = updatedOpportunity.Benefits;
+        opportunity.Salary = updatedOpportunity.Salary;
+        opportunity.Url = updatedOpportunity.Url;
         opportunity.RemoteOrOnline = updatedOpportunity.RemoteOrOnline;
         opportunity.Dates = updatedOpportunity.Dates;
         opportunity.Duration = updatedOpportunity.Duration;
-        opportunity.Scope = updatedOpportunity.Scope;
-        opportunity.Regions = updatedOpportunity.Regions;
-
-        // Atualizar atividades
-        _context.Activities.RemoveRange(opportunity.Activities);
-        opportunity.Activities = updatedOpportunity.Activities;
 
         try
         {
@@ -159,9 +169,14 @@ public class OpportunitiesController : ControllerBase
         }
 
         var opportunity = await _context.Opportunities.FindAsync(id);
-        if (opportunity == null || opportunity.OrganizationId != int.Parse(orgId))
+        if (opportunity == null)
         {
             return NotFound();
+        }
+
+        if (opportunity.OrganizationId != int.Parse(orgId))
+        {
+            return Forbid();
         }
 
         _context.Opportunities.Remove(opportunity);
@@ -174,24 +189,4 @@ public class OpportunitiesController : ControllerBase
     {
         return _context.Opportunities.Any(e => e.Id == id);
     }
-}
-
-public class CreateOpportunityRequest
-{
-    public string Url { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public bool RemoteOrOnline { get; set; }
-    public string Dates { get; set; }
-    public string Duration { get; set; }
-    public string Scope { get; set; }
-    public List<string> Regions { get; set; }
-}
-
-public class VolunteerResponse
-{
-    public int Count { get; set; }
-    public string Next { get; set; }
-    public string Previous { get; set; }
-    public List<Opportunity> Results { get; set; }
 } 

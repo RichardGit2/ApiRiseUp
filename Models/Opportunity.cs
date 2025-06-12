@@ -5,48 +5,65 @@ namespace RiseUpAPI.Models;
 
 public class Opportunity
 {
-    [Key]
-    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public int Id { get; set; }
 
     [Required]
-    [MaxLength(200)]
-    public string Url { get; set; }
+    [StringLength(200)]
+    public string Title { get; set; } = string.Empty;
 
     [Required]
-    [MaxLength(100)]
-    public string Title { get; set; }
+    [StringLength(2000)]
+    public string Description { get; set; } = string.Empty;
 
     [Required]
-    public string Description { get; set; }
+    [StringLength(100)]
+    public string Company { get; set; } = string.Empty;
+
+    [Required]
+    [StringLength(100)]
+    public string Location { get; set; } = string.Empty;
+
+    [Required]
+    [StringLength(50)]
+    public string Type { get; set; } = string.Empty;
+
+    [Required]
+    [StringLength(1000)]
+    public string Requirements { get; set; } = string.Empty;
+
+    [Required]
+    [StringLength(1000)]
+    public string Benefits { get; set; } = string.Empty;
+
+    [Required]
+    [StringLength(100)]
+    public string Salary { get; set; } = string.Empty;
+
+    [StringLength(200)]
+    public string Url { get; set; } = string.Empty;
 
     public bool RemoteOrOnline { get; set; }
 
     [Required]
-    public string OrganizationId { get; set; }
-    public Organization Organization { get; set; }
+    public int OrganizationId { get; set; }
 
-    public List<Activity> Activities { get; set; } = new();
+    [ForeignKey("OrganizationId")]
+    public Organization Organization { get; set; } = null!;
 
-    [Required]
-    public string Dates { get; set; }
-
-    [Required]
-    public string Duration { get; set; }
+    public ICollection<Activity> Activities { get; set; } = new List<Activity>();
 
     [Required]
-    public Audience Audience { get; set; }
+    [StringLength(100)]
+    public string Dates { get; set; } = string.Empty;
 
     [Required]
-    public string Scope { get; set; }
+    [StringLength(100)]
+    public string Duration { get; set; } = string.Empty;
 
-    [Required]
-    public List<string> Regions { get; set; }
+    public int AudienceId { get; set; }
 
-    public string Company { get; set; }
-    public string Location { get; set; }
-    public string Type { get; set; }
-    public string Requirements { get; set; }
-    public string Benefits { get; set; }
-    public string Salary { get; set; }
+    [ForeignKey("AudienceId")]
+    public Audience Audience { get; set; } = null!;
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 } 

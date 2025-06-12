@@ -1,7 +1,7 @@
 # Documentação da API RiseUp
 
 ## Visão Geral
-A API RiseUp é uma API RESTful desenvolvida em .NET 8 que fornece funcionalidades para gerenciamento de oportunidades de trabalho e autenticação de usuários.
+A API RiseUp é uma API RESTful desenvolvida em .NET 8 que fornece funcionalidades para gerenciamento de oportunidades de trabalho voluntário e autenticação de usuários.
 
 ## Base URL
 ```
@@ -73,7 +73,7 @@ Autentica um usuário e retorna um token JWT.
 ### Oportunidades
 
 #### GET /api/opportunities
-Retorna uma lista de oportunidades de trabalho.
+Retorna uma lista de oportunidades de trabalho voluntário.
 
 **Query Parameters:**
 - page (int, opcional): Número da página (padrão: 1)
@@ -85,23 +85,54 @@ Retorna uma lista de oportunidades de trabalho.
 **Response:**
 ```json
 {
-    "success": true,
-    "data": {
-        "items": [
-            {
+    "count": 0,
+    "next": "string",
+    "previous": "string",
+    "results": [
+        {
+            "id": "string",
+            "title": "string",
+            "description": "string",
+            "company": "string",
+            "location": "string",
+            "type": "string",
+            "requirements": "string",
+            "benefits": "string",
+            "salary": "string",
+            "url": "string",
+            "remoteOrOnline": true,
+            "organization": {
                 "id": "string",
-                "title": "string",
+                "name": "string",
                 "description": "string",
-                "company": "string",
-                "location": "string",
-                "type": "string",
-                "createdAt": "datetime"
-            }
-        ],
-        "totalItems": 0,
-        "totalPages": 0,
-        "currentPage": 0
-    }
+                "logo": "string",
+                "website": "string",
+                "email": "string",
+                "phone": "string",
+                "address": "string"
+            },
+            "activities": [
+                {
+                    "id": "string",
+                    "name": "string",
+                    "description": "string"
+                }
+            ],
+            "dates": "string",
+            "duration": "string",
+            "audience": {
+                "id": "string",
+                "scope": "string",
+                "regions": [
+                    {
+                        "id": "string",
+                        "name": "string"
+                    }
+                ]
+            },
+            "createdAt": "datetime"
+        }
+    ]
 }
 ```
 
@@ -122,6 +153,37 @@ Retorna detalhes de uma oportunidade específica.
         "requirements": "string",
         "benefits": "string",
         "salary": "string",
+        "url": "string",
+        "remoteOrOnline": true,
+        "organization": {
+            "id": "string",
+            "name": "string",
+            "description": "string",
+            "logo": "string",
+            "website": "string",
+            "email": "string",
+            "phone": "string",
+            "address": "string"
+        },
+        "activities": [
+            {
+                "id": "string",
+                "name": "string",
+                "description": "string"
+            }
+        ],
+        "dates": "string",
+        "duration": "string",
+        "audience": {
+            "id": "string",
+            "scope": "string",
+            "regions": [
+                {
+                    "id": "string",
+                    "name": "string"
+                }
+            ]
+        },
         "createdAt": "datetime"
     }
 }
@@ -140,7 +202,26 @@ Cria uma nova oportunidade (requer autenticação).
     "type": "string",
     "requirements": "string",
     "benefits": "string",
-    "salary": "string"
+    "salary": "string",
+    "url": "string",
+    "remoteOrOnline": true,
+    "organizationId": "string",
+    "activities": [
+        {
+            "name": "string",
+            "description": "string"
+        }
+    ],
+    "dates": "string",
+    "duration": "string",
+    "audience": {
+        "scope": "string",
+        "regions": [
+            {
+                "name": "string"
+            }
+        ]
+    }
 }
 ```
 
@@ -159,6 +240,37 @@ Cria uma nova oportunidade (requer autenticação).
         "requirements": "string",
         "benefits": "string",
         "salary": "string",
+        "url": "string",
+        "remoteOrOnline": true,
+        "organization": {
+            "id": "string",
+            "name": "string",
+            "description": "string",
+            "logo": "string",
+            "website": "string",
+            "email": "string",
+            "phone": "string",
+            "address": "string"
+        },
+        "activities": [
+            {
+                "id": "string",
+                "name": "string",
+                "description": "string"
+            }
+        ],
+        "dates": "string",
+        "duration": "string",
+        "audience": {
+            "id": "string",
+            "scope": "string",
+            "regions": [
+                {
+                    "id": "string",
+                    "name": "string"
+                }
+            ]
+        },
         "createdAt": "datetime"
     }
 }
@@ -177,7 +289,26 @@ Atualiza uma oportunidade existente (requer autenticação).
     "type": "string",
     "requirements": "string",
     "benefits": "string",
-    "salary": "string"
+    "salary": "string",
+    "url": "string",
+    "remoteOrOnline": true,
+    "organizationId": "string",
+    "activities": [
+        {
+            "name": "string",
+            "description": "string"
+        }
+    ],
+    "dates": "string",
+    "duration": "string",
+    "audience": {
+        "scope": "string",
+        "regions": [
+            {
+                "name": "string"
+            }
+        ]
+    }
 }
 ```
 
@@ -196,6 +327,37 @@ Atualiza uma oportunidade existente (requer autenticação).
         "requirements": "string",
         "benefits": "string",
         "salary": "string",
+        "url": "string",
+        "remoteOrOnline": true,
+        "organization": {
+            "id": "string",
+            "name": "string",
+            "description": "string",
+            "logo": "string",
+            "website": "string",
+            "email": "string",
+            "phone": "string",
+            "address": "string"
+        },
+        "activities": [
+            {
+                "id": "string",
+                "name": "string",
+                "description": "string"
+            }
+        ],
+        "dates": "string",
+        "duration": "string",
+        "audience": {
+            "id": "string",
+            "scope": "string",
+            "regions": [
+                {
+                    "id": "string",
+                    "name": "string"
+                }
+            ]
+        },
         "createdAt": "datetime"
     }
 }
@@ -218,32 +380,63 @@ Remove uma oportunidade (requer autenticação).
 Realiza uma busca por oportunidades com filtros avançados.
 
 **Query Parameters:**
-- query (string, opcional): Termo de busca
+- format (string, opcional): Formato da resposta (padrão: "json")
+- page (string, opcional): Número da página (padrão: "1")
+- search (string, opcional): Termo de busca
 - location (string, opcional): Localização
 - type (string, opcional): Tipo de oportunidade
-- page (int, opcional): Número da página
-- pageSize (int, opcional): Itens por página
 
 **Response:**
 ```json
 {
-    "success": true,
-    "data": {
-        "items": [
-            {
+    "count": 0,
+    "next": "string",
+    "previous": "string",
+    "results": [
+        {
+            "id": "string",
+            "title": "string",
+            "description": "string",
+            "company": "string",
+            "location": "string",
+            "type": "string",
+            "requirements": "string",
+            "benefits": "string",
+            "salary": "string",
+            "url": "string",
+            "remoteOrOnline": true,
+            "organization": {
                 "id": "string",
-                "title": "string",
+                "name": "string",
                 "description": "string",
-                "company": "string",
-                "location": "string",
-                "type": "string",
-                "createdAt": "datetime"
-            }
-        ],
-        "totalItems": 0,
-        "totalPages": 0,
-        "currentPage": 0
-    }
+                "logo": "string",
+                "website": "string",
+                "email": "string",
+                "phone": "string",
+                "address": "string"
+            },
+            "activities": [
+                {
+                    "id": "string",
+                    "name": "string",
+                    "description": "string"
+                }
+            ],
+            "dates": "string",
+            "duration": "string",
+            "audience": {
+                "id": "string",
+                "scope": "string",
+                "regions": [
+                    {
+                        "id": "string",
+                        "name": "string"
+                    }
+                ]
+            },
+            "createdAt": "datetime"
+        }
+    ]
 }
 ```
 
@@ -281,9 +474,9 @@ Content-Type: application/json
 }
 ```
 
-### 3. Listar Oportunidades
+### 3. Buscar Oportunidades
 ```http
-GET /api/opportunities?page=1&pageSize=10&location=São Paulo
+GET /api/search?search=desenvolvedor&location=São Paulo&type=CLT&page=1
 Authorization: Bearer {seu_token}
 ```
 
@@ -301,7 +494,26 @@ Content-Type: application/json
     "type": "CLT",
     "requirements": "Experiência com .NET e React",
     "benefits": "Plano de saúde, VR, VT",
-    "salary": "R$ 8.000,00"
+    "salary": "R$ 8.000,00",
+    "url": "https://exemplo.com/vaga",
+    "remoteOrOnline": true,
+    "organizationId": "org123",
+    "activities": [
+        {
+            "name": "Desenvolvimento",
+            "description": "Desenvolvimento de aplicações web"
+        }
+    ],
+    "dates": "2024-03-01 a 2024-12-31",
+    "duration": "8 horas diárias",
+    "audience": {
+        "scope": "Nacional",
+        "regions": [
+            {
+                "name": "São Paulo"
+            }
+        ]
+    }
 }
 ```
 
@@ -309,4 +521,7 @@ Content-Type: application/json
 - Todos os endpoints que manipulam oportunidades (POST, PUT, DELETE) requerem autenticação
 - O token JWT expira após 60 minutos
 - A API implementa paginação em todas as listagens
-- As respostas seguem um padrão consistente com os campos success, message e data 
+- As respostas seguem um padrão consistente com os campos count, next, previous e results
+- O endpoint de busca (/api/search) é otimizado para integração com o app Kotlin
+- Todas as datas são retornadas em UTC
+- As URLs de paginação (next/previous) são geradas automaticamente 

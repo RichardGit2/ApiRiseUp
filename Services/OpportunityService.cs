@@ -54,7 +54,7 @@ namespace RiseUpAPI.Services
             return (opportunities, totalItems);
         }
 
-        public async Task<Opportunity> GetOpportunityById(string id)
+        public async Task<Opportunity> GetOpportunityById(int id)
         {
             return await _context.Opportunities
                 .Include(o => o.Organization)
@@ -72,7 +72,7 @@ namespace RiseUpAPI.Services
             return opportunity;
         }
 
-        public async Task<Opportunity> UpdateOpportunity(string id, Opportunity opportunity)
+        public async Task<Opportunity> UpdateOpportunity(int id, Opportunity opportunity)
         {
             var existingOpportunity = await _context.Opportunities.FindAsync(id);
             if (existingOpportunity == null)
@@ -83,7 +83,7 @@ namespace RiseUpAPI.Services
             return existingOpportunity;
         }
 
-        public async Task DeleteOpportunity(string id)
+        public async Task DeleteOpportunity(int id)
         {
             var opportunity = await _context.Opportunities.FindAsync(id);
             if (opportunity != null)

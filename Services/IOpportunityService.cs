@@ -11,9 +11,9 @@ namespace RiseUpAPI.Services
             int pageNumber,
             int pageSize);
 
-        Task<Opportunity> GetOpportunityById(string id);
+        Task<Opportunity> GetOpportunityById(int id);
         Task<Opportunity> CreateOpportunity(Opportunity opportunity);
-        Task<Opportunity> UpdateOpportunity(string id, Opportunity opportunity);
-        Task DeleteOpportunity(string id);
+        Task<Opportunity> UpdateOpportunity(int id, Opportunity opportunity);
+        Task DeleteOpportunity(int id);
     }
 } 

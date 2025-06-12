@@ -1,18 +1,20 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RiseUpAPI.Models;
 
 public class Audience
 {
-    [Key]
-    public string Id { get; set; } = Guid.NewGuid().ToString();
-    
-    public string Scope { get; set; }
-    
-    public string OpportunityId { get; set; }
-    public Opportunity Opportunity { get; set; }
-    
-    public List<Region> Regions { get; set; } = new();
-    
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public int Id { get; set; }
+
+    [Required]
+    [StringLength(50)]
+    public string Scope { get; set; } = string.Empty;
+
+    public ICollection<Region> Regions { get; set; } = new List<Region>();
+
+    public int OpportunityId { get; set; }
+
+    [ForeignKey("OpportunityId")]
+    public Opportunity Opportunity { get; set; } = null!;
 } 

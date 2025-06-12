@@ -1,14 +1,19 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RiseUpAPI.Models
 {
     public class Region
     {
-        [Key]
-        public string Id { get; set; } = Guid.NewGuid().ToString();
-        public string Name { get; set; }
-        public string AudienceId { get; set; }
-        public Audience Audience { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string Name { get; set; } = string.Empty;
+
+        public int AudienceId { get; set; }
+
+        [ForeignKey("AudienceId")]
+        public Audience Audience { get; set; } = null!;
     }
 } 
