@@ -8,44 +8,44 @@ public class User
 
     [Required]
     [StringLength(11)]
-    public string CPF { get; set; } = "string";
+    public string CPF { get; set; } = string.Empty;
 
     [Required]
     [StringLength(100)]
-    public string FullName { get; set; } = "string";
+    public string FullName { get; set; } = string.Empty;
 
     [Required]
     [EmailAddress]
     [StringLength(100)]
-    public string Email { get; set; } = "user@example.com";
+    public string Email { get; set; } = string.Empty;
 
     [Required]
     [StringLength(100)]
-    public string Password { get; set; } = "string";
+    public string Password { get; set; } = string.Empty;
 
     [Required]
     [StringLength(8)]
-    public string ZipCode { get; set; } = "string";
+    public string ZipCode { get; set; } = string.Empty;
 
     [Required]
     [StringLength(100)]
-    public string Street { get; set; } = "string";
+    public string Street { get; set; } = string.Empty;
 
     [Required]
     [StringLength(50)]
-    public string City { get; set; } = "string";
+    public string City { get; set; } = string.Empty;
 
     [Required]
     [StringLength(2)]
-    public string State { get; set; } = "st";
+    public string State { get; set; } = string.Empty;
 
     [Required]
     [StringLength(50)]
-    public string Country { get; set; } = "string";
+    public string Country { get; set; } = string.Empty;
 
     [Required]
     [StringLength(20)]
-    public string Role { get; set; } = "string";
+    public string Role { get; set; } = "User";
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

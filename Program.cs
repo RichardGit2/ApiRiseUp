@@ -31,11 +31,32 @@ builder.Services.AddCors(options =>
 var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
 if (string.IsNullOrEmpty(connectionString))
 {
-    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    var dbServer = Environment.GetEnvironmentVariable("DB_SERVER");
+    var dbName = Environment.GetEnvironmentVariable("DB_NAME");
+    var dbUser = Environment.GetEnvironmentVariable("DB_USER");
+    var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
+
+    if (string.IsNullOrEmpty(dbServer) || string.IsNullOrEmpty(dbName) || 
+        string.IsNullOrEmpty(dbUser) || string.IsNullOrEmpty(dbPassword))
+    {
+        connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    }
+    else
+    {
+        connectionString = $"Host={dbServer};Database={dbName};Username={dbUser};Password={dbPassword};SSL Mode=Require;Trust Server Certificate=true";
+    }
 }
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+{
+    options.UseNpgsql(connectionString, npgsqlOptions =>
+    {
+        npgsqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 3,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorCodesToAdd: null);
+    });
+});
 
 // Configurar JWT
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -105,12 +126,20 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        
+        logger.LogInformation("Tentando conectar ao banco de dados...");
         context.Database.Migrate();
+        logger.LogInformation("Migrações aplicadas com sucesso.");
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Ocorreu um erro ao aplicar as migrações.");
+        logger.LogError(ex, "Ocorreu um erro ao aplicar as migrações. Detalhes: {Message}", ex.Message);
+        if (ex.InnerException != null)
+        {
+            logger.LogError("Erro interno: {InnerMessage}", ex.InnerException.Message);
+        }
     }
 }
 

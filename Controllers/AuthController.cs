@@ -39,10 +39,17 @@ public class AuthController : ControllerBase
         {
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Modelo inválido: {Errors}", ModelState.Values
+                var errors = ModelState.Values
                     .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage));
-                return BadRequest(ModelState);
+                    .Select(e => e.ErrorMessage);
+                _logger.LogWarning("Modelo inválido: {Errors}", string.Join(", ", errors));
+                return BadRequest(new { message = "Dados inválidos", errors });
+            }
+
+            if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
+            {
+                _logger.LogWarning("Email ou senha não fornecidos");
+                return BadRequest(new { message = "Email e senha são obrigatórios" });
             }
 
             if (await _context.Users.AnyAsync(u => u.Email == request.Email))
@@ -79,10 +86,15 @@ public class AuthController : ControllerBase
             _logger.LogInformation("Usuário registrado com sucesso: {Email}", user.Email);
             return Ok(new { message = "Usuário registrado com sucesso", user = new { id = user.Id, email = user.Email } });
         }
+        catch (DbUpdateException ex)
+        {
+            _logger.LogError(ex, "Erro ao salvar no banco de dados");
+            return StatusCode(500, new { message = "Erro ao salvar no banco de dados", details = ex.InnerException?.Message });
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao registrar usuário");
-            return StatusCode(500, new { message = "Erro interno do servidor ao registrar usuário" });
+            return StatusCode(500, new { message = "Erro interno do servidor ao registrar usuário", details = ex.Message });
         }
     }
 
