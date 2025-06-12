@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models; // Adicionar esta diretiva using
+using Microsoft.OpenApi.Models;
 using RiseUpAPI.Data;
 using RiseUpAPI.Services;
 using System.Text;
@@ -46,16 +46,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "RiseUp API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { 
+        Title = "RiseUp API", 
+        Version = "v1",
+        Description = "API para a plataforma RiseUp de voluntariado e oportunidades",
+        Contact = new OpenApiContact
+        {
+            Name = "Equipe RiseUp",
+            Email = "contato@riseup.com"
+        }
+    });
     
     // Configuração para usar JWT no Swagger
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "JWT Authorization header using the Bearer scheme",
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
-        Scheme = "bearer"
+        Scheme = "bearer",
+        BearerFormat = "JWT"
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -89,7 +99,12 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "RiseUp API v1");
+    // Configura a página inicial para apontar para o Swagger UI
+    options.RoutePrefix = string.Empty;
+});
 
 app.UseCors();
 
@@ -99,6 +114,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Redirecionamento da raiz para o Swagger
+app.MapGet("/", () => Results.Redirect("/swagger"));
 
 // Aplicar migrações automaticamente
 using (var scope = app.Services.CreateScope())
