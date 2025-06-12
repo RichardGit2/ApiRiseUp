@@ -28,8 +28,14 @@ builder.Services.AddCors(options =>
 });
 
 // Configurar DbContext
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+if (string.IsNullOrEmpty(connectionString))
+{
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+}
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 
 // Configurar JWT
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
